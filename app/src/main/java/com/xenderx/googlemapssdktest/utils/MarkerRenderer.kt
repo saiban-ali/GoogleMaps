@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Typeface
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -28,34 +27,33 @@ class MarkerRenderer (
 ) : DefaultClusterRenderer<CustomMapMarker>(context, map, clusterManager) {
 
     private var iconGenerator: IconGenerator = IconGenerator(context.applicationContext)
-    private var titleTextView: TextView
-    private var coordinatesTextView: TextView
-
-    private val view: View = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
-        .inflate(R.layout.marker_layout, null)
+    private var markerWidth: Int = context.resources.getDimension(R.dimen.custom_marker_image_width).toInt()
+    private var markerHeight: Int = context.resources.getDimension(R.dimen.custom_marker_image_height).toInt()
+    private val titleTextView: TextView = TextView(context)
+    private val coordinatesTextView: TextView = TextView(context)
 
     init {
-//        val padding = context.resources.getDimension(R.dimen.custom_marker_padding).toInt()
-//        val linearLayout = LinearLayout(context)
-//        linearLayout.layoutParams = ViewGroup.LayoutParams(markerWidth, markerHeight)
-//        linearLayout.apply {
-//            orientation = LinearLayout.VERTICAL
-//            setPadding(padding)
-//            addView(titleTextView.apply {
-//                gravity = Gravity.CENTER
-//                textSize = 14f
-//                setTypeface(typeface, Typeface.BOLD)
-//            })
-//            addView(coordinatesTextView.apply {
-//                gravity = Gravity.CENTER
-//                textSize = 12f
-//            })
-//        }
+        val padding = context.resources.getDimension(R.dimen.custom_marker_padding).toInt()
+        val linearLayout = LinearLayout(context)
+        linearLayout.layoutParams = ViewGroup.LayoutParams(markerWidth, markerHeight)
+        linearLayout.apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(padding)
+            addView(titleTextView.apply {
+                gravity = Gravity.CENTER
+                textSize = 14f
+                setTypeface(typeface, Typeface.BOLD)
+            })
+            addView(coordinatesTextView.apply {
+                gravity = Gravity.CENTER
+                textSize = 12f
+            })
+        }
 
-        titleTextView = view.findViewById(R.id.title)
-        coordinatesTextView = view.findViewById(R.id.coordinates)
+//        val view = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
+//            .inflate(R.layout.activity_login, null)
 
-        iconGenerator.setContentView(view)
+        iconGenerator.setContentView(linearLayout)
     }
 
     override fun onBeforeClusterItemRendered(
@@ -82,40 +80,31 @@ class MarkerRenderer (
         marker?.let {
             it.position = customMarker.position
 
-//            val padding = context.resources.getDimension(R.dimen.custom_marker_padding).toInt()
-//            val linearLayout = LinearLayout(context)
-//            linearLayout.layoutParams = ViewGroup.LayoutParams(markerWidth, markerHeight)
-//            linearLayout.apply {
-//                orientation = LinearLayout.VERTICAL
-//                setPadding(padding)
-//                addView(TextView(context).apply {
-//                    gravity = Gravity.CENTER
-//                    text = customMarker.user.userName
-//                    textSize = 14f
-//                    setTypeface(typeface, Typeface.BOLD)
-//                })
-//                addView(TextView(context).apply {
-//                    gravity = Gravity.CENTER
-//                    text = String.format(
-//                        Locale.US,
-//                        "%f, %f",
-//                        customMarker.position.latitude,
-//                        customMarker.position.longitude
-//                    )
-//                    textSize = 12f
-//                })
-//            }
-
-            view.findViewById<TextView>(R.id.title).text = customMarker.user.userName
-            view.findViewById<TextView>(R.id.coordinates).text = String.format(
+            val padding = context.resources.getDimension(R.dimen.custom_marker_padding).toInt()
+            val linearLayout = LinearLayout(context)
+            linearLayout.layoutParams = ViewGroup.LayoutParams(markerWidth, markerHeight)
+            linearLayout.apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(padding)
+                addView(TextView(context).apply {
+                    gravity = Gravity.CENTER
+                    text = customMarker.user.userName
+                    textSize = 14f
+                    setTypeface(typeface, Typeface.BOLD)
+                })
+                addView(TextView(context).apply {
+                    gravity = Gravity.CENTER
+                    text = String.format(
                         Locale.US,
                         "%f, %f",
                         customMarker.position.latitude,
                         customMarker.position.longitude
                     )
+                    textSize = 12f
+                })
+            }
 
-            iconGenerator.setContentView(view)
-
+            iconGenerator.setContentView(linearLayout)
             val icon = iconGenerator.makeIcon()
             it.setIcon(BitmapDescriptorFactory.fromBitmap(icon))
 
