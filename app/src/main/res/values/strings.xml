@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GoogleMapsSdkTest</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="collection_users">users</string>
+    <string name="collection_user_location">User Location</string>
+    <string name="marker_title">title</string>
+</resources>
